@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <title>Place Details</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: url(https://img.freepik.com/free-vector/cement-wall-texture-background_53876-91519.jpg?w=996&t=st=1729091702~exp=1729092302~hmac=bb73e4ed7a78b3c7529d99467d6926cf8d59416fc9296da16d8b9ccb5be62c64) !important;
+        color: #fff;
+        padding: 0;
+        margin: 0;
+      }
+
+      .container {
+        background-color: #2a2a2a;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        padding: 30px;
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      .image-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      .details-container h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #00c8ff;
+      }
+
+      .details-container p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .table th {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        border-radius: 5px;
+      }
+
+      .table td {
+        background-color: #333;
+        color: white;
+        padding: 12px;
+        border-radius: 5px;
+      }
+
+      .btnedit_delete {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      .button-17 {
+        background-color: #007bff;
+        border: none;
+        border-radius: 50px;
+        color: white;
+        padding: 8px 70px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      }
+
+      .button-17:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .button-17.delete {
+        background-color: red;
+      }
+
+      .button-17.delete:hover {
+        background-color: darkred;
+      }
+
+      .comment-header {
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 40px;
+        color: #00c8ff;
+        text-align: center;
+        border-bottom: 3px solid #007bff;
+        padding-bottom: 10px;
+      }
+
+      .comment-container {
+        background-color: #333;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .comment-container .col-3 {
+        font-weight: bold;
+        color: #00c8ff;
+      }
+
+      .comment-container .col-8 {
+        color: #ddd;
+      }
+
+      .comment-container button {
+        background-color: #00c8ff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .comment-container button:hover {
+        background-color: #007bff;
+        transform: translateY(-2px);
+      }
+      .fw-bold {
+        font-weight: 700 !important;
+        color: #9696ff;
+      }
+      .add {
+        margin-top: 20px;
+      }
+      @media (max-width: 768px) {
+        .row {
+          flex-direction: column;
+        }
+
+        .image-container {
+          text-align: center;
+        }
+
+        .details-container h1 {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("../views/navbar") %>
+
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-md-6 image-container">
+          <img src="<%= place.image %>" alt="<%= place.name %>" />
+        </div>
+        <div class="col-md-6 details-container">
+          <h1><%= place.name %></h1>
+          <p><%= place.description %></p>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th>Author</th>
+                <td><%= place.author %></td>
+              </tr>
+              <tr>
+                <th>Date</th>
+                <td><%= place.date %></td>
+              </tr>
+              <tr>
+                <th>Location</th>
+                <td><%= place.location %></td>
+              </tr>
+              <tr>
+                <th>Rating</th>
+                <td><%= place.rating %></td>
+              </tr>
+              <tr>
+                <th>Tags</th>
+                <td><%= place.tags %></td>
+              </tr>
+              <tr>
+                <th>Color?</th>
+                <td><%= place.color ? "Yes" : "No" %></td>
+              </tr>
+            </tbody>
+          </table>
+          <% if(user && user.username === place.owner.username) { %>
+          <div class="btnedit_delete">
+            <a href="/places/<%= place._id %>/edit">
+              <button class="button-17">Edit</button>
+            </a>
+            <form
+              action="/places/<%= place._id %>?_method=DELETE"
+              method="POST"
+            >
+              <button class="button-17 delete">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% }%>
+      <div class="row">
+        <a href="/places/<%= place._id %>/comments/new" class="col-3">
+          <button class="button-17 add">Add Comment</button>
+        </a>
+        <div class="col-2">
+          <% if(user && place.upvotes.indexOf(user.username)>=0) { %>
+          <button id="upvote" class="btn btn-success btn-lg mt-3">+</button>
+          <% } else if(user) { %>
+          <button id="upvote" class="btn btn-outline-success btn-lg mt-3">
+            +
+          </button>
+          <% } %>
+          <span id="score" class="mx-2"
+            ><%= place.upvotes.length - place.downvotes.length %></span
+          >
+          <% if(user && place.downvotes.indexOf(user.username)>=0) { %>
+          <button id="downvote" class="btn btn-danger btn-lg mt-3">-</button>
+          <% } else if(user) { %>
+          <button id="downvote" class="btn btn-outline-danger btn-lg mt-3">
+            -
+          </button>
+          <% } %>
+        </div>
+      </div>
+
+      <% commentRoute.forEach((comment) => { %>
+      <div class="row comment-container mt-4 d-flex justify-content-center">
+        <div class="col-10 d-flex align-items-center" style="gap: 50px">
+          <div class="fw-bold"><%= comment.user.username %></div>
+          <div><%= comment.text %></div>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+          <a
+            href="/places/<%= place._id %>/comments/<%= comment._id %>/edit"
+            class="me-2"
+          >
+            <button class="button-17">Edit</button>
+          </a>
+          <form
+            action="/places/<%= place._id %>/comments/<%= comment._id %>?_method=DELETE"
+            method="POST"
+            class="d-inline"
+          >
+            <button class="button-17 delete">Delete</button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <script>
+      var placeId = "<%- place._id %>"
+    </script>
+    <script src="/js/places_show.js"></script>
+  </body>
+</html>
